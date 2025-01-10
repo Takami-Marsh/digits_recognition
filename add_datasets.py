@@ -123,7 +123,10 @@ def add_datasets(generator, n, device="cpu", output_dir="generated_dataset2", ba
         print(f"Digit {digit}: created {n} new images (from index {start_index} to {start_index + n - 1}).")
 
 def main():
-    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+    if torch.backends.mps.is_available():
+      device = torch.device("mps")
+    else:
+      device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     print(f"Using device: {device}")
 
     # Load the model automatically from cgan_models folder
@@ -141,7 +144,7 @@ def main():
         print("Invalid input. Exiting.")
         return
 
-    add_datasets(generator, n, device=device, output_dir="generated_dataset2", batch_size=64)
+    add_datasets(generator, n, device=device, output_dir="generated_dataset", batch_size=64)
     print("Done adding new datasets.")
 
 if __name__ == "__main__":

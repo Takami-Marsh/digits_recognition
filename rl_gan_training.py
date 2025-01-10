@@ -16,10 +16,10 @@ class Config:
     latent_dim = 100
     num_classes = 10
     batch_size = 32
-    num_samples_per_digit = 2  # Number of real samples to use per digit
-    num_epochs = 50
+    num_samples_per_digit = 5  # Number of real samples to use per digit
+    num_epochs = 200
     learning_rate = 0.0001
-    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+    device = torch.device("mps" if torch.backends.mps.is_available() else "cuda" if torch.cuda.is_available() else "cpu")
 
 ##################################
 # Generator and Discriminator Architecture

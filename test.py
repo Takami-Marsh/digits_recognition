@@ -164,7 +164,11 @@ if __name__ == "__main__":
     models_folder = "saved_models"
 
     # Determine device
-    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+    if torch.backends.mps.is_available():
+      device = torch.device("mps")
+    else:
+      device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+    print(f"Using device: {device}")
 
     # Load all models in the folder
     models_dict = load_all_models_from_folder(models_folder, device)

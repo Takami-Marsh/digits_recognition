@@ -17,7 +17,12 @@ epochs = 10  # You can increase for better performance
 ##################################
 # Check Device
 ##################################
-device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+if torch.backends.mps.is_available():
+  device = torch.device("mps")
+elif torch.cuda.is_available():
+  device = torch.device("cuda")
+else:
+  device = torch.device("cpu")
 print(f"Using device: {device}")
 
 ##################################
@@ -32,7 +37,7 @@ data_transform = transforms.Compose([
 ])
 
 aug_transform = transforms.Compose([
-    transforms.RandomRotation(30),                # ±30° rotation
+    # transforms.RandomRotation(30),                # ±30° rotation
     transforms.Grayscale(num_output_channels=1),
     transforms.Resize((28, 28)),
     transforms.ToTensor(),
@@ -170,8 +175,12 @@ print(f"Test Accuracy: {accuracy:.2f}%")
 ##################################
 model_name = input("Enter a name for the saved model (e.g., 'my_digit_model'): ")
 if not model_name.strip():
-    model_name = "default_mnist_model"
+  model_name = "default_mnist_model"
 
-filename = f"{model_name}.pth"
+# Ensure the directory exists
+save_dir = "saved_models"
+os.makedirs(save_dir, exist_ok=True)
+
+filename = os.path.join(save_dir, f"{model_name}.pth")
 torch.save(model.state_dict(), filename)
 print(f"Model weights saved to '{filename}'")
